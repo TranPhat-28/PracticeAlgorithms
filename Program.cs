@@ -18,14 +18,15 @@ void PrintArray(int[] array)
 
 // -------------SORTINGS------------- //
 // --Expand a function to read more-- //
+
+// Time: O(n^2)
+// Space: O(1)
 void SelectionSort(int[] Array)
 {
     /*
     The idea of this sort is: Loop through the array, find the smallest element, put it to the first place.
     Then Loop through the array (this time from the 2nd position because the first one is the smallest), find
     the second smallest, put it after the first... And so on
-
-    This is similar to how you sort your hand when playing cards
     */
 
     int minIndex;
@@ -113,6 +114,99 @@ void InsertionSort(int[] Array)
     }
 }
 
+// Time: O(nlogn)
+// Space: O(n)
+void MergeSort(int[] Array)
+{
+    /*
+        Recursively divide the array into smaller arrays, sort the smaller subarrays and
+        then merge the sorted array back
+    */
+
+    // Stop recursion
+    if (Array.Length <= 1)
+    {
+        return;
+    }
+    // Divide into smaller subarrays
+    else
+    {
+        int middleIndex = Array.Length / 2;
+
+        // Create new subarrays 0 1 2 - 3 4 5 6
+        int[] leftArray = new int[middleIndex];
+        int[] rightArray = new int[Array.Length - middleIndex];
+
+        // Copy the elements from the original array
+        int i = 0;
+        int j = 0;
+        for (; i < Array.Length; i++)
+        {
+            if (i < middleIndex)
+            {
+                leftArray[i] = Array[i];
+            }
+            else
+            {
+                rightArray[j] = Array[i];
+                j++;
+            }
+        }
+
+        // Recursively call the MergeSort
+        MergeSort(leftArray);
+        MergeSort(rightArray);
+        // After that, merge the 2 merged subarrays
+        Merge(leftArray, rightArray, Array);
+    }
+}
+
+// Merge: Helper function for the MergeSort
+void Merge(int[] LeftSubarray, int[] RightSubarray, int[] MergedArray)
+{
+    // This function merge 2 merged arrays
+    int leftLength = LeftSubarray.Length;
+    int rightLength = RightSubarray.Length;
+
+    int i = 0;
+    int j = 0;
+    int a = 0;
+
+    while (i < leftLength && j < rightLength)
+    {
+        if (LeftSubarray[i] < RightSubarray[j])
+        {
+            MergedArray[a] = LeftSubarray[i];
+            i++;
+        }
+        else
+        {
+            MergedArray[a] = RightSubarray[j];
+            j++;
+        }
+        a++;
+    }
+
+    if (i == leftLength)
+    {
+        while (j < rightLength)
+        {
+            MergedArray[a] = RightSubarray[j];
+            j++;
+            a++;
+        }
+    }
+    else if (j == rightLength)
+    {
+        while (i < leftLength)
+        {
+            MergedArray[a] = LeftSubarray[i];
+            i++;
+            a++;
+        }
+    }
+}
+
 // ------------SEARCHINGS------------ //
 // --Expand a function to read more-- //
 
@@ -123,7 +217,7 @@ void InsertionSort(int[] Array)
 // Original array
 PrintArray(randomArray);
 // Algorithm
-InsertionSort(randomArray);
+MergeSort(randomArray);
 // Output
 Console.WriteLine("Sorted array");
 PrintArray(randomArray);
