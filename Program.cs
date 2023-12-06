@@ -207,6 +207,57 @@ void Merge(int[] LeftSubarray, int[] RightSubarray, int[] MergedArray)
     }
 }
 
+// Counting Sort
+void CountingSort(int[] Array)
+{
+    // Find the max element from the array
+    int max = Array[0];
+
+    for (int i = 1; i < Array.Length; i++)
+    {
+        if (Array[i] > max)
+        {
+            max = Array[i];
+        }
+    }
+
+    // Initialize an array of max+1 elements with all elems = 0
+    int[] Count = new int[max+1];
+
+    // Store the count of each unique element of the input array at their respective indices
+    for (int i = 0; i < Array.Length; i++)
+    {
+        Count[Array[i]] += 1;
+    }
+
+    // Store the cumulative sum or prefix sum of the elements of the countArray[] by doing countArray[i] = countArray[i – 1] + countArray[i]. This will help in placing the elements of the input array at the correct index in the output array.
+    for (int i = 1; i < Count.Length; i++)
+    {
+        Count[i] = Count[i - 1] + Count[i];
+    }
+
+    // Create a new SortedArray
+    int[] Sorted = new int[Array.Length];
+
+    // Traverse from the end of the input array
+    // Update outputArray[ countArray[ inputArray[i] ] – 1] = inputArray[i]. Also, update countArray[ inputArray[i] ] = countArray[ inputArray[i] ]–
+    for (int i = Array.Length - 1; i >= 0; i--)
+    {
+        // Place the elem to the Sorted array
+        Sorted[Count[Array[i]] - 1] = Array[i];
+        // Update the Prefix sum
+        Count[Array[i]]--;
+    }
+
+    // Watch here: https://www.youtube.com/watch?v=EItdcGhSLf4
+
+    // Return the result
+    for (int i = 0; i < Array.Length; i++)
+    {
+        Array[i] = Sorted[i];
+    }   
+}
+
 // ------------SEARCHINGS------------ //
 // --Expand a function to read more-- //
 
@@ -217,7 +268,7 @@ void Merge(int[] LeftSubarray, int[] RightSubarray, int[] MergedArray)
 // Original array
 PrintArray(randomArray);
 // Algorithm
-MergeSort(randomArray);
+CountingSort(randomArray);
 // Output
 Console.WriteLine("Sorted array");
 PrintArray(randomArray);
