@@ -207,9 +207,55 @@ void Merge(int[] LeftSubarray, int[] RightSubarray, int[] MergedArray)
     }
 }
 
+// QuickSort
+void QuickSort(int[] Array, int start, int end)
+{
+    // Choose an element as the pivot. Then divide the array into 2 part: less-than-pivot go to the left and 
+    // greater-than-pivot go to the right. From there, for each subarray, recursively choosing a pivot,... Finally join
+    // the subarrays together.
+
+    // Stop recursion
+    if (start >= end)
+    {
+        return;
+    }
+
+    // Take the last element as the pivot
+    int pivot = Array[end];
+
+    // i: keep track of items that are LESS than pivot
+    // j: for looping
+    int i = start - 1;
+
+    // This loop will put all the items less than pivot to the left and greater than pivot to the right
+    for (int j = start; j <= end - 1; j++)
+    {
+        if (Array[j] < pivot)
+        {
+            i++;
+            int tmp = Array[j];
+            Array[j] = Array[i];
+            Array[i] = tmp;
+        }
+    }
+
+    // After the loop is finished, increase i to put the pivot to its correct position
+    i++;
+    int tmp2 = Array[i];
+    Array[i] = Array[end];
+    Array[end] = tmp2;
+
+    // Then recursively call QuickSort
+    QuickSort(Array, start, i - 1);
+    QuickSort(Array, i + 1, end);
+}
+
 // Counting Sort
 void CountingSort(int[] Array)
 {
+    // The idea is count the frequency of the element and place it in the correct index of another "Frequency Array",
+    // and from there we construct the sorted array without any comparisons used.
+
     // Find the max element from the array
     int max = Array[0];
 
@@ -222,7 +268,7 @@ void CountingSort(int[] Array)
     }
 
     // Initialize an array of max+1 elements with all elems = 0
-    int[] Count = new int[max+1];
+    int[] Count = new int[max + 1];
 
     // Store the count of each unique element of the input array at their respective indices
     for (int i = 0; i < Array.Length; i++)
@@ -255,20 +301,26 @@ void CountingSort(int[] Array)
     for (int i = 0; i < Array.Length; i++)
     {
         Array[i] = Sorted[i];
-    }   
+    }
 }
 
 // ------------SEARCHINGS------------ //
 // --Expand a function to read more-- //
 
-
+// A utility function to swap two elements
+void Swap(int[] arr, int i, int j)
+{
+    int temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+}
 
 // PROGRAM STARTS HERE
 
 // Original array
 PrintArray(randomArray);
 // Algorithm
-CountingSort(randomArray);
+QuickSort(randomArray, 0, randomArray.Length - 1);
 // Output
 Console.WriteLine("Sorted array");
 PrintArray(randomArray);
