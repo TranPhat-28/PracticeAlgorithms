@@ -306,13 +306,69 @@ void CountingSort(int[] Array)
 
 // ------------SEARCHINGS------------ //
 // --Expand a function to read more-- //
-
-// A utility function to swap two elements
-void Swap(int[] arr, int i, int j)
+int BinarySearch(int[] Array, int value)
 {
-    int temp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = temp;
+    int left = 0;
+    int right = Array.Length - 1;
+
+    while (left <= right)
+    {
+        int mid = (right - left) / 2 + left;
+
+        if (Array[mid] == value)
+        {
+            return mid;
+        }
+        else if (Array[mid] < value)
+        {
+            left = mid + 1;
+        }
+        else
+        {
+            right = mid - 1;
+        }
+    }
+
+    // If not found
+    return -1;
+}
+
+int InterpolationSearch(int[] Array, int low, int high, int value)
+{
+    int pos;
+
+    // Since array is sorted, an element present in array must be in range defined by corner.
+    if (low <= high && value >= Array[low] && value <= Array[high])
+    {
+
+        // Probing the position with keeping uniform distribution in mind.
+        // The equation:
+        //              (high - low) * (value - Array[low])
+        // pos = low + -------------------------------------
+        //                     Array[high] - Array[low]
+
+        pos = low + (((high - low) / (Array[high] - Array[low])) * (value - Array[low]));
+
+        // Return if target found
+        if (Array[pos] == value)
+        {
+            return pos;
+        }
+
+        // If value is larger, value is in right sub array 
+        if (Array[pos] < value)
+        {
+            return InterpolationSearch(Array, pos + 1, high, value);
+        }
+
+        // If value is smaller, value is in left sub array 
+        if (Array[pos] > value)
+        {
+            return InterpolationSearch(Array, low, pos - 1, value);
+        }
+    }
+    // Else not found
+    return -1;
 }
 
 // PROGRAM STARTS HERE
@@ -324,3 +380,6 @@ QuickSort(randomArray, 0, randomArray.Length - 1);
 // Output
 Console.WriteLine("Sorted array");
 PrintArray(randomArray);
+// Search for 9, 70
+Console.WriteLine("The index of 9 is: " + InterpolationSearch(randomArray, 0, randomArray.Length - 1, 9).ToString());
+Console.WriteLine("The index of 70 is: " + BinarySearch(randomArray, 70).ToString());
